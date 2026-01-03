@@ -9,8 +9,7 @@ function App() {
 
   return (
     <>
-      <div className="App">
-        <h1>Blog con ReactJS</h1>
+      <div className="layout">
         <Rutas />
       </div>
     </>

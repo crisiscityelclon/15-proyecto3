@@ -1,7 +1,25 @@
-import React from 'react'
+import React from "react";
+
 
 export const Sidebar = () => {
+  
   return (
-    <div>Sidebar</div>
-  )
-}
+    <aside className="lateral">
+      <div className="search">
+        <h3 className="title">Buscador</h3>
+        <form>
+          <input type="text" />
+          <button>Buscar</button>
+        </form>
+      </div>
+      <div>
+        <h3 className="title">Añadir pelicula</h3>
+        <form>
+          <input type="text" placeholder="Titulo" />
+          <textarea placeholder="Descripcion"></textarea>
+          <input type="submit" value="Guardar" />
+        </form>
+      </div>
+    </aside>
+  );
+};
