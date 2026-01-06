@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { Global } from "../../helpers/Global";
+import { Peticion } from "../../helpers/Peticion";
 
 export const Articulos = () => {
   const [articulos, setArticulos] = useState([]);
@@ -9,11 +11,7 @@ export const Articulos = () => {
   }, []);
 
   const conseguirArticulos = async () => {
-    const url = "http://localhost:3900/api/articulos";
-    let peticion = await fetch(url, {
-      method: "GET",
-    });
-    let datos = await peticion.json();
+    const {datos, cargando} = await Peticion(Global.url + "articulos", "GET")
 
     if (datos.status === "success") {
       setArticulos(datos.articulos);
