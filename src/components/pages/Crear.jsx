@@ -1,12 +1,11 @@
-import React from 'react'
-import { useState } from 'react'
-import { useForm } from '../../hooks/useForm'
-import { Peticion } from '../../helpers/Peticion'
-import { Global } from '../../helpers/Global'
+import React from "react";
+import { useState } from "react";
+import { useForm } from "../../hooks/useForm";
+import { Peticion } from "../../helpers/Peticion";
+import { Global } from "../../helpers/Global";
 
 export const Crear = () => {
-
-  const {formulario, enviado, cambiado} = useForm({});
+  const { formulario, enviado, cambiado } = useForm({});
   const [resultado, setResultado] = useState("No enviado");
 
   const guardarArticulo = async (e) => {
@@ -17,45 +16,72 @@ export const Crear = () => {
     let nuevoArticulo = formulario;
 
     // Guardar articulo en el backend
-    const {datos, cargando} = await Peticion(Global.url + "crear", "POST", nuevoArticulo);
+    const { datos } = await Peticion(
+      Global.url + "crear",
+      "POST",
+      nuevoArticulo
+    );
 
     if (datos.status == "success") {
       setResultado("Guardado");
-    }else{
+
+      // Subir imagen
+      const fileInput = document.querySelector("#file");
+
+      const formData = new FormData();
+      formData.append("file0", fileInput.files[0]);
+
+      const subida = await Peticion(
+        Global.url + "subir-imagen/" + datos.articulo._id,
+        "POST",
+        formData,
+        true
+      );
+
+      if (subida.status === "success") {
+        setResultado("Guardado");
+      } else {
+        setResultado("Error");
+      }
+    } else {
       setResultado("Error");
     }
-    console.log(datos);
-    
-   }
+  };
 
   return (
-    <div className='jumbo'>
+    <div className="jumbo">
       <h1>Crear Articulo</h1>
       <p>Formulario para crear un articulo</p>
 
-      <strong>{resultado == "Guardado" ? "Articulo guardado con exito" : ""}</strong>
+      <strong>
+        {resultado == "Guardado" ? "Articulo guardado con exito" : ""}
+      </strong>
       <strong>{resultado == "Error" ? "Los datos no son validos" : ""}</strong>
 
       {/* Montar formulario*/}
-      <form className='formulario' onSubmit={guardarArticulo}>
-
-        <div className='form-group'>
-          <label htmlFor='titulo'>Titulo:</label>
-          <input type='text' id='titulo' name='titulo' onChange={cambiado} />
-        </div>
-        
-        <div className='form-group'>
-          <label htmlFor='contenido'>Contenido:</label>
-          <textarea type='text' id='contenido' name='contenido' onChange={cambiado} />
+      <form className="formulario" onSubmit={guardarArticulo}>
+        <div className="form-group">
+          <label htmlFor="titulo">Titulo:</label>
+          <input type="text" id="titulo" name="titulo" onChange={cambiado} />
         </div>
 
-        <div className='form-group'>
-          <label htmlFor='file0'>Imagen</label>
-          <input type='file' name='file0' id="file"  />
+        <div className="form-group">
+          <label htmlFor="contenido">Contenido:</label>
+          <textarea
+            type="text"
+            id="contenido"
+            name="contenido"
+            onChange={cambiado}
+          />
         </div>
 
-        <input type='submit' value='Guardar' className='btn btn-success' />
+        <div className="form-group">
+          <label htmlFor="file0">Imagen</label>
+          <input type="file" name="file0" id="file" />
+        </div>
+
+        <input type="submit" value="Guardar" className="btn btn-success" />
       </form>
-      </div>
-  )
-}
+    </div>
+  );
+};
