@@ -1,26 +1,40 @@
 import React from 'react'
 import { useState } from 'react'
 import { useForm } from '../../hooks/useForm'
+import { Peticion } from '../../helpers/Peticion'
+import { Global } from '../../helpers/Global'
 
 export const Crear = () => {
 
-  const {formulario, enviado, cambiado} = useForm({})
+  const {formulario, enviado, cambiado} = useForm({});
+  const [resultado, setResultado] = useState("No enviado");
 
-  const guardarArticulo = (e) => {
+  const guardarArticulo = async (e) => {
     e.preventDefault();
 
     // Recuperar datos del formulario
 
-    let nuevoArticulo = JSON.stringify(formulario);
+    let nuevoArticulo = formulario;
 
     // Guardar articulo en el backend
-  }
+    const {datos, cargando} = await Peticion(Global.url + "crear", "POST", nuevoArticulo);
+
+    if (datos.status == "success") {
+      setResultado("Guardado");
+    }else{
+      setResultado("Error");
+    }
+    console.log(datos);
+    
+   }
 
   return (
     <div className='jumbo'>
       <h1>Crear Articulo</h1>
       <p>Formulario para crear un articulo</p>
-      <pre>{JSON.stringify(formulario)}</pre>
+
+      <strong>{resultado == "Guardado" ? "Articulo guardado con exito" : ""}</strong>
+      <strong>{resultado == "Error" ? "Los datos no son validos" : ""}</strong>
 
       {/* Montar formulario*/}
       <form className='formulario' onSubmit={guardarArticulo}>
