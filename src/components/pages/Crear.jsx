@@ -1,27 +1,43 @@
 import React from 'react'
+import { useState } from 'react'
+import { useForm } from '../../hooks/useForm'
 
 export const Crear = () => {
+
+  const {formulario, enviado, cambiado} = useForm({})
+
+  const guardarArticulo = (e) => {
+    e.preventDefault();
+
+    // Recuperar datos del formulario
+
+    let nuevoArticulo = JSON.stringify(formulario);
+
+    // Guardar articulo en el backend
+  }
+
   return (
     <div className='jumbo'>
       <h1>Crear Articulo</h1>
       <p>Formulario para crear un articulo</p>
+      <pre>{JSON.stringify(formulario)}</pre>
 
       {/* Montar formulario*/}
-      <form className='formulario'>
+      <form className='formulario' onSubmit={guardarArticulo}>
 
         <div className='form-group'>
           <label htmlFor='titulo'>Titulo:</label>
-          <input type='text' id='titulo' name='titulo' />
+          <input type='text' id='titulo' name='titulo' onChange={cambiado} />
         </div>
         
         <div className='form-group'>
           <label htmlFor='contenido'>Contenido:</label>
-          <textarea type='text' id='contenido' name='contenido' />
+          <textarea type='text' id='contenido' name='contenido' onChange={cambiado} />
         </div>
 
         <div className='form-group'>
           <label htmlFor='file0'>Imagen</label>
-          <input type='file' name='file0' id="file" />
+          <input type='file' name='file0' id="file"  />
         </div>
 
         <input type='submit' value='Guardar' className='btn btn-success' />
