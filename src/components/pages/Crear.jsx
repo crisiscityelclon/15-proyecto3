@@ -22,11 +22,17 @@ export const Crear = () => {
       nuevoArticulo
     );
 
-    if (datos.status == "success") {
+    if (datos.status === "success") {
       setResultado("Guardado");
+    } else {
+      setResultado("Error");
+    }
 
-      // Subir imagen
-      const fileInput = document.querySelector("#file");
+    // Subir imagen
+    const fileInput = document.querySelector("#file");
+
+    if (datos.status === "success" && fileInput.files[0]) {
+      setResultado("Guardado");
 
       const formData = new FormData();
       formData.append("file0", fileInput.files[0]);
@@ -38,13 +44,11 @@ export const Crear = () => {
         true
       );
 
-      if (subida.status === "success") {
+      if (subida.datos.status === "success") {
         setResultado("Guardado");
       } else {
         setResultado("Error");
       }
-    } else {
-      setResultado("Error");
     }
   };
 
