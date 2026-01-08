@@ -2,42 +2,42 @@ export const Peticion = async (url, metodo, datosGuardar = "", archivos = false)
   let cargando = true;
 
   let opciones = {
-    method: "GET",
+    method: metodo,
+    headers: {}
   };
 
-  if (metodo == "GET" || metodo == "DELETE") {
-    opciones = {
-      method: metodo,
-    };
-  }
-
-  if (metodo == "POST" || metodo == "PUT") {
-    let body = JSON.stringify(datosGuardar);
-
+  if (metodo === "POST" || metodo === "PUT") {
     if (archivos) {
-      opciones = {
-        method: metodo,
-        body: datosGuardar,
-      };
-      
+      opciones.body = datosGuardar;
     } else {
-      opciones = {
-        method: metodo,
-        body,
-        headers: {
-          "Content-Type": "application/json"
-        },
-      };
+      opciones.headers['Content-Type'] = 'application/json';
+      opciones.body = JSON.stringify(datosGuardar);
     }
   }
 
-  const peticion = await fetch(url, opciones);
-  const datos = await peticion.json();
+  try {
+    const peticion = await fetch(url, opciones);
+    cargando = false;
 
-  cargando = false;
+    if (peticion.status === 204) {
+      return {
+        datos: { status: "success" },
+        cargando: false
+      };
+    }
+    
+    const datos = await peticion.json();
 
-  return {
-    datos,
-    cargando,
-  };
+    return {
+      datos,
+      cargando: false
+    };
+
+  } catch (error) {
+    return {
+      datos: null,
+      cargando: false,
+      error: error.message
+    };
+  }
 };
