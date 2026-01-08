@@ -1,11 +1,13 @@
 import React from "react";
+import {Global} from "../../helpers/Global";
 
 export const Listado = ({ articulos, setArticulos }) => {
   return articulos.map((articulo) => {
     return (
       <article key={articulo._id} className="articulo-item">
         <div className="mascara">
-          <img src="https://concepto.de/wp-content/uploads/2018/09/google-inc-e1537467602232.jpg" />
+         {articulo.imagen != "default.png" && <img src={Global.url + "imagen/" + articulo.imagen} />}
+         {articulo.imagen == "default.png" && <img src=" https://img.freepik.com/psd-premium/ilustracion-arte-neon-flores-fantasia-png_53876-607319.jpg?semt=ais_hybrid&w=740&q=80" />}
         </div>
         <div className="datos">
           <h3 className="title">{articulo.titulo}</h3>
